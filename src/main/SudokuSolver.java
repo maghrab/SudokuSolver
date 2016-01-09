@@ -7,5 +7,8 @@ public class SudokuSolver {
 				+ " 0 0 0 9 8 0 7 1 6 7 0 0 0 0 8 0 0 0 4"
 				+ " 9 0 0 0 6 0 5 0 0 0 0 0 0 0 6 7 1");
 		test.printGrid();
+		System.out.print("\n");
+		Sudoku test2 = new Sudoku(test.toString());
+		test2.printGrid();
 	}
 }
