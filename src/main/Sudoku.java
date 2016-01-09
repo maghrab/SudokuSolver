@@ -1,6 +1,8 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -8,8 +10,6 @@ public class Sudoku {
 	String config;
 	int emptySpaces;
 	int nonZeroSpaces;
-	
-	Stack<Sudoku> nextMovements;
 	
 	int [][] grid;
 	boolean[][] rowDigits;
@@ -58,6 +58,18 @@ public class Sudoku {
 		
 		
 		
+		
+	}
+	
+	public Sudoku(Sudoku other){
+		this.config = other.config;
+		this.emptySpaces = other.emptySpaces;
+		this.nonZeroSpaces = other.nonZeroSpaces;
+		
+		this.grid = other.grid;
+		this.rowDigits = other.rowDigits;
+		this.colDigits = other.colDigits;
+		this.zoneDigits = other.zoneDigits;
 		
 	}
 	
@@ -137,6 +149,11 @@ public class Sudoku {
 		throw new SudukoStringException("Invalid Suduko input");
 	}
 	
+	public boolean isSolution(){
+		
+		return ( nonZeroSpaces == 0 );
+	}
+	
 	public void printGrid(){
 		
 		for(int i = 0; i < 9 ; i++){
@@ -150,6 +167,52 @@ public class Sudoku {
 			System.out.println("");
 		}
 		
+	}
+	
+	public void putDigit(int digit, int row, int col){
+		grid[row][col] = digit;
+		rowDigits[row][digit] = true;
+		colDigits[col][digit] = true;
+		zoneDigits[row/3][col/3][digit] = true;
+		nonZeroSpaces--;	
+	}
+	
+	public Stack<Sudoku> findNextSudoku(){
+		
+		Stack<Sudoku> nextStates = new Stack<Sudoku>();
+		
+		// find an empty space to fill in
+		int row = 0;
+		int col = 0;
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<9; j++) {
+				if (grid[i][j]== 0) {
+					row = i;
+					col = j;
+
+					for (int digit=1; digit<=9; digit++) {
+						if (rowDigits[row][digit]) 
+							continue; // digit already used in row
+						if (colDigits[col][digit]) 
+							continue; // digit already used in column
+						if (zoneDigits[row/3][col/3][digit])
+							continue; // digit already used in zone
+
+						// This is a legal digit!  Add it to possible moves.
+						Sudoku temp = new Sudoku(this.toString());
+						temp.putDigit(digit,row,col);
+						nextStates.push(temp);
+					}
+					
+					if (grid[i][j] == 0){
+						return nextStates;
+					}
+
+				}
+			}
+		}
+		
+		return nextStates;
 	}
 	
 	public String toString(){
