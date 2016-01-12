@@ -19,6 +19,8 @@ public class SudokuSolver {
 	
 	public static Sudoku solveSudoku(Sudoku initial){
 		
+		if ( !initial.isValid() ) return null;
+		
 		Stack<Sudoku> nextStates;
 		
 		//Seen states of the Sudoku

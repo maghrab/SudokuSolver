@@ -7,14 +7,16 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Sudoku {
-	String config;
-	int emptySpaces;
-	int nonZeroSpaces;
 	
-	int [][] grid;
-	boolean[][] rowDigits;
-	boolean[][] colDigits;
-	boolean[][][] zoneDigits;
+	private String config;
+	private int emptySpaces;
+	private int nonZeroSpaces;
+	
+	private int [][] grid;
+	private boolean[][] rowDigits;
+	private boolean[][] colDigits;
+	private boolean[][][] zoneDigits;
+	private Scanner scanner;
 	
 	public Sudoku(String config){
 		
@@ -81,7 +83,7 @@ public class Sudoku {
 		int col = 0;
 		int digit;
 		
-		Scanner scanner = new Scanner(config);
+		scanner = new Scanner(config);
 		
 		while(scanner.hasNext()){
 			
@@ -91,7 +93,7 @@ public class Sudoku {
 				
 				// make sure digit is valid and between 0 and 9
 				if ( digit < 0 || digit > 9){
-					invalid();
+					return null;
 				}
 				
 				tempGrid[row][col] = digit;
@@ -105,17 +107,17 @@ public class Sudoku {
 					if (rowDigits[row][digit] == false)
 						rowDigits[row][digit] = true;
 					else
-						invalid();
+						return null;
 
 					if(colDigits[col][digit] == false)
 						colDigits[col][digit] = true;
 					else
-						invalid();
+						return null;
 
 					if(zoneDigits[row/3][col/3][digit] == false)
 						zoneDigits[row/3][col/3][digit] = true;
 					else
-						invalid();
+						return null;
 				}
 				col++;
 				counter--;
@@ -135,7 +137,8 @@ public class Sudoku {
 		
 		// make sure we got all the digits
 		if (counter != 0){
-			extracted();
+			//extracted();
+			return null;
 		}
 		scanner.close();
 		return tempGrid;
@@ -213,6 +216,12 @@ public class Sudoku {
 		}
 		
 		return nextStates;
+	}
+	
+	
+	public boolean isValid(){
+		if (grid == null) return false;
+		return true;
 	}
 	
 	public String toString(){
